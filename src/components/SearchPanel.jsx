@@ -12,7 +12,6 @@ function SearchPanel() {
 
   const { setPrediction } = useContext(TrafficContext);
 
-  // Get all unique locations
   const locations = [
     ...new Set(routes.flatMap((route) => [route.source, route.destination])),
   ];
@@ -26,15 +25,12 @@ function SearchPanel() {
     setLoading(true);
 
     setTimeout(() => {
-      // Find selected journey
-      console.log("Routes:", routes);
-
-const selectedJourney = routes.find(
-  (route) =>
-    route &&
-    route.source === source &&
-    route.destination === destination
-);
+      const selectedJourney = routes.find(
+        (route) =>
+          route &&
+          route.source === source &&
+          route.destination === destination
+      );
 
       if (!selectedJourney) {
         alert("No demo route available for this journey.");
@@ -42,41 +38,30 @@ const selectedJourney = routes.find(
         return;
       }
 
-      // Default recommendation = Fastest Route
       const bestRoute = selectedJourney.options[0];
 
       setPrediction((prev) => ({
         ...prev,
-
-        // Save all available routes
         routes: selectedJourney.options,
-
         selectedRoute: 0,
 
-        // AI Prediction
         eta: bestRoute.eta,
         confidence: bestRoute.confidence,
         traffic: bestRoute.traffic,
         weather: bestRoute.weather,
         event: bestRoute.event,
 
-        // Recommendation
         routeType: bestRoute.name,
         distance: bestRoute.distance,
         fuelSaved: bestRoute.fuelSaved,
         reason: bestRoute.reason,
 
-        // User Input
         source,
         destination,
 
-        // Roads
         routeRoads: bestRoute.roads,
-
-        // Map
         routeGeometry: bestRoute.coordinates,
 
-        // Navigation
         navigationSteps: bestRoute.roads.map((road, index) => ({
           instruction:
             index === 0
@@ -97,28 +82,28 @@ const selectedJourney = routes.find(
     <>
       {loading && <AILoader />}
 
-      <div className="bg-slate-900 rounded-3xl shadow-xl p-8 mt-8 border border-slate-800">
+      <div className="bg-slate-900 rounded-3xl shadow-xl border border-slate-800 p-5 sm:p-6 lg:p-8">
 
-        <h2 className="text-3xl text-white font-bold">
+        <h2 className="text-2xl md:text-3xl font-bold text-white">
           Smart Route Planner
         </h2>
 
-        <p className="text-slate-400 mt-2">
+        <p className="text-slate-400 mt-2 text-sm md:text-base">
           AI predicts the safest and fastest route before traffic builds up.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-8">
 
           <div>
-            <label className="text-slate-300 flex gap-2 mb-2">
-              <MapPin />
+            <label className="flex items-center gap-2 text-slate-300 mb-2 font-medium">
+              <MapPin size={18} />
               Source
             </label>
 
             <select
               value={source}
               onChange={(e) => setSource(e.target.value)}
-              className="w-full rounded-xl bg-slate-800 p-4 text-white border border-slate-700"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 p-4 text-white outline-none focus:ring-2 focus:ring-cyan-500"
             >
               {locations.map((location) => (
                 <option key={location}>{location}</option>
@@ -127,15 +112,15 @@ const selectedJourney = routes.find(
           </div>
 
           <div>
-            <label className="text-slate-300 flex gap-2 mb-2">
-              <Navigation />
+            <label className="flex items-center gap-2 text-slate-300 mb-2 font-medium">
+              <Navigation size={18} />
               Destination
             </label>
 
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full rounded-xl bg-slate-800 p-4 text-white border border-slate-700"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 p-4 text-white outline-none focus:ring-2 focus:ring-cyan-500"
             >
               {locations.map((location) => (
                 <option key={location}>{location}</option>
@@ -147,9 +132,9 @@ const selectedJourney = routes.find(
 
         <button
           onClick={handlePredict}
-          className="mt-8 bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 hover:scale-105 px-8 py-4 rounded-xl text-slate-900 font-bold flex items-center gap-3 shadow-lg"
+          className="mt-8 w-full md:w-auto inline-flex items-center justify-center gap-3 bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 hover:scale-105 px-8 py-4 rounded-xl text-slate-900 font-bold shadow-lg"
         >
-          <Search />
+          <Search size={20} />
           Predict Smart Route
         </button>
 
